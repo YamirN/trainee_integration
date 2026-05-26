@@ -1,0 +1,27 @@
+
+
+CREATE COMPUTE MODULE getEpId_Compute3
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE refErrorInput REFERENCE TO InputRoot.BLOB.BLOB;
+
+		IF LASTMOVE(refErrorInput) THEN
+			DECLARE textoError CHARACTER CAST(refErrorInput AS CHARACTER CCSID 1208 ENCODING 546);
+
+			SET OutputRoot.JSON.Data.mensaje  = 'Ocurrió un error al consultar el episodio';
+			SET OutputRoot.JSON.Data.problema = textoError;
+		ELSE
+			SET OutputRoot.JSON.Data.mensaje  = 'Error de comunicación con el servidor remoto';
+			SET OutputRoot.JSON.Data.problema = 'No se recibió respuesta del backend o hubo timeout';
+		END IF;
+
+		CREATE FIELD OutputRoot.JSON.Data.juegosAparicion IDENTITY(JSON.Array)juegosAparicion;
+		CREATE FIELD OutputRoot.JSON.Data.habitantes IDENTITY(JSON.Array)habitantes;
+
+		SET OutputLocalEnvironment.Destination.HTTP.ReplyStatusCode = 500;
+
+		RETURN TRUE;
+		
+	END;
+
+END MODULE;

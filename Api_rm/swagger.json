@@ -1,0 +1,33 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Api_rm",
+    "version" : "1.0.0",
+    "description" : "Api_rm"
+  },
+  "paths" : {
+    "/episode/{epId}" : {
+      "get" : {
+        "operationId" : "getEpId",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        },
+        "produces" : [ "application/json" ],
+        "description" : "Obtiene episodios con personajes de Rick&Morty",
+        "parameters" : [ {
+          "required" : true,
+          "name" : "epId",
+          "in" : "path",
+          "type" : "number",
+          "description" : "Id de episodios de Rick&Morty"
+        } ]
+      }
+    }
+  },
+  "basePath" : "/api_rm/v1"
+}

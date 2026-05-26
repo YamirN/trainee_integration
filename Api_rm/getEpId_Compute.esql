@@ -1,0 +1,15 @@
+
+
+CREATE COMPUTE MODULE getEpId_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE eprmId CHARACTER InputLocalEnvironment.REST.Input.Parameters.epId;
+		
+		SET OutputLocalEnvironment.Destination.HTTP.RequestURL ='https://rickandmortyapi.com/api/episode/' || eprmId;
+		SET OutputLocalEnvironment.Destination.HTTP.RequestLine.Method = 'GET';
+		SET OutputLocalEnvironment.Destination.HTTP.RequestTimeout = 10;
+		RETURN TRUE;
+	END;
+
+
+END MODULE;

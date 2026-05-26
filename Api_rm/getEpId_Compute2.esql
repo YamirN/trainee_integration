@@ -1,0 +1,37 @@
+
+
+CREATE COMPUTE MODULE getEpId_Compute2
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE refEpisode REFERENCE TO InputRoot.JSON.Data;
+
+		CREATE LASTCHILD OF OutputRoot DOMAIN 'JSON';
+		CREATE FIELD OutputRoot.JSON.Data;
+		DECLARE refOut REFERENCE TO OutputRoot.JSON.Data;
+
+		SET refOut.mensaje      = 'Episodio procesado con exito';
+		SET refOut.id           = refEpisode.id;
+		SET refOut.nombre       = refEpisode.name;
+		SET refOut.fechaEmision = refEpisode.air_date;
+		SET refOut.codigo       = refEpisode.episode;
+		SET refOut.url          = refEpisode.url;
+		SET refOut.creado       = refEpisode.created;
+
+		CREATE FIELD refOut.personajes IDENTITY(JSON.Array)personajes;
+
+		DECLARE i INT 1;
+
+		FOR refCharacter AS refEpisode.characters.Item[] DO
+			DECLARE urlPersonaje CHARACTER FIELDVALUE(refCharacter);
+			DECLARE posPersonaje INT POSITION('/character/' IN urlPersonaje);
+			DECLARE idPersonaje CHARACTER SUBSTRING(urlPersonaje FROM posPersonaje + 11);
+
+			SET refOut.personajes.Item[i] = idPersonaje;
+			SET i = i + 1;
+		END FOR;
+
+		RETURN TRUE;
+	END;
+
+END MODULE;
+

@@ -1,0 +1,42 @@
+
+
+CREATE COMPUTE MODULE getEpId_Compute1
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		DECLARE charsRef REFERENCE TO InputRoot.JSON.Data.characters.Item[1];
+		DECLARE fullUrl CHARACTER '';
+		DECLARE charId CHARACTER '';
+		DECLARE ids CHARACTER '';
+
+		DELETE FIELD Environment.Variables.Episode;
+
+		SET Environment.Variables.Episode.id = InputRoot.JSON.Data.id;
+		SET Environment.Variables.Episode.name = InputRoot.JSON.Data.name;
+		SET Environment.Variables.Episode.air_date = InputRoot.JSON.Data.air_date;
+		SET Environment.Variables.Episode.episode = InputRoot.JSON.Data.episode;
+		SET Environment.Variables.Episode.url = InputRoot.JSON.Data.url;
+		SET Environment.Variables.Episode.created = InputRoot.JSON.Data.created;
+
+		WHILE LASTMOVE(charsRef) DO
+			SET fullUrl = TRIM(CAST(FIELDVALUE(charsRef) AS CHARACTER));
+			SET charId = SUBSTRING(fullUrl AFTER 'character/');
+
+			IF ids = '' THEN
+				SET ids = charId;
+			ELSE
+				SET ids = ids || ',' || charId;
+			END IF;
+
+			MOVE charsRef NEXTSIBLING;
+		END WHILE;
+
+		SET OutputLocalEnvironment.Destination.HTTP.RequestURL =
+			'https://rickandmortyapi.com/api/character/' || ids;
+		SET OutputLocalEnvironment.Destination.HTTP.RequestLine.Method = 'GET';
+		SET OutputLocalEnvironment.Destination.HTTP.RequestTimeout = 10;
+
+		RETURN TRUE;
+	END;
+
+	
+END MODULE;

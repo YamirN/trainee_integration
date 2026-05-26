@@ -1,0 +1,26 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Api_Dental",
+    "version" : "1.0.0",
+    "description" : "Api_Dental"
+  },
+  "paths" : {
+    "/usuarios" : {
+      "get" : {
+        "operationId" : "getUsuarios",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        },
+        "produces" : [ "application/json" ],
+        "description" : "Obtener Usuarios"
+      }
+    }
+  },
+  "basePath" : "/api_dental/v1"
+}
