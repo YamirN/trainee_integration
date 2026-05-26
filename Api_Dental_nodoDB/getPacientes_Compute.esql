@@ -1,0 +1,39 @@
+
+
+CREATE COMPUTE MODULE getPacientes_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		CREATE FIELD OutputRoot.JSON.Data IDENTITY (JSON.Array)Data;
+		
+		DECLARE refPacienteIn REFERENCE TO Environment.PacientesLista[1];
+		DECLARE refOut REFERENCE TO OutputRoot.JSON.Data; 
+		
+		WHILE LASTMOVE(refPacienteIn) DO
+			
+			CREATE LASTCHILD OF OutputRoot.JSON.Data AS refOut NAME 'Item';
+			
+			SET refOut.id                = refPacienteIn.id;
+			SET refOut.empresa_id        = refPacienteIn.empresa_id;
+			SET refOut.numero_historia   = refPacienteIn.numero_historia;
+			SET refOut.tipo_documento    = refPacienteIn.tipo_documento;
+			SET refOut.dni               = refPacienteIn.dni;
+			SET refOut.nombre            = refPacienteIn.nombre;
+			SET refOut.apellido_paterno  = refPacienteIn.apellido_paterno;
+			SET refOut.apellido_materno  = refPacienteIn.apellido_materno;
+			SET refOut.fecha_nacimiento  = refPacienteIn.fecha_nacimiento;
+			SET refOut.genero            = refPacienteIn.genero;
+			SET refOut.grupo_sanguineo   = refPacienteIn.grupo_sanguineo;
+			SET refOut.estado_civil      = refPacienteIn.estado_civil;
+			SET refOut.ocupacion         = refPacienteIn.ocupacion;
+			SET refOut.telefono          = refPacienteIn.telefono;
+			SET refOut.email             = refPacienteIn.email;
+			SET refOut.direccion         = refPacienteIn.direccion;
+			SET refOut.activo            = refPacienteIn.activo;
+			SET refOut.sucursal_id       = refPacienteIn.sucursal_id;
+			
+			MOVE refPacienteIn NEXTSIBLING;
+		END WHILE;
+
+		RETURN TRUE;
+	END;
+END MODULE;

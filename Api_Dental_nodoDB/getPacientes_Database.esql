@@ -1,0 +1,16 @@
+
+
+CREATE DATABASE MODULE getPacientes_Database
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		SET Environment.PacientesLista[] = 
+			SELECT P.id, P.empresa_id, P.numero_historia, P.tipo_documento, P.dni, 
+			       P.nombre, P.apellido_paterno, P.apellido_materno, P.fecha_nacimiento, 
+			       P.genero, P.grupo_sanguineo, P.estado_civil, P.ocupacion, P.telefono, 
+			       P.email, P.direccion, P.activo, P.sucursal_id
+			FROM Database.pacientes AS P;
+			
+		RETURN TRUE;
+	END;
+
+END MODULE;
